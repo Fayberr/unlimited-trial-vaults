@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
  * instead of the hand-rolled {@link VaultModConfigScreen}.
  */
 public final class VaultClothScreen {
-    private static final int MAX_SPAWNER_COOLDOWN_SECONDS = 3600;
 
     private VaultClothScreen() {}
 
@@ -32,8 +31,8 @@ public final class VaultClothScreen {
         general.addEntry(bool(eb, "ominous_vault_unlimited", "Ominous Vaults Unlimited",
                 true, c.ominous_vault_unlimited,
                 "Ominous vaults can be unlocked unlimited times per player (keys still consumed)."));
-        general.addEntry(eb.startIntSlider(Component.literal("Spawner Re-Challenge Delay (seconds)"),
-                        c.spawner_cooldown_seconds, -1, MAX_SPAWNER_COOLDOWN_SECONDS)
+        general.addEntry(eb.startIntField(Component.literal("Spawner Re-Challenge Delay (seconds)"),
+                        c.spawner_cooldown_seconds)
                 .setDefaultValue(-1)
                 .setTooltip(Component.literal(
                         "How long trial spawners stay in cooldown after a challenge. -1 = vanilla, 0 = instantly re-triggerable."))

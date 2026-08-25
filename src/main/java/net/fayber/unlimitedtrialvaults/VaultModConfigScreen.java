@@ -1,8 +1,8 @@
 package net.fayber.unlimitedtrialvaults;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -13,8 +13,8 @@ import net.minecraft.network.chat.Component;
  * the integrated server shares the same static config, so changes apply live.
  */
 public class VaultModConfigScreen extends Screen {
-    /** Slider top end, in seconds. */
-    private static final int MAX_SPAWNER_COOLDOWN_SECONDS = 3600;
+    private static final int START_Y = 25;
+    private static final int SPACING = 26;
 
     private final Screen parent;
 
@@ -26,29 +26,25 @@ public class VaultModConfigScreen extends Screen {
     @Override
     protected void init() {
         int centerX = this.width / 2;
-        int spacing = 22;
-        int startY = 25;
 
         this.addRenderableWidget(booleanButton("normal_vault_unlimited", "Normal Vaults Unlimited",
-                centerX, startY));
+                centerX, START_Y));
         this.addRenderableWidget(booleanButton("ominous_vault_unlimited", "Ominous Vaults Unlimited",
-                centerX, startY + spacing));
+                centerX, START_Y + SPACING));
 
-        int seconds = ModConfig.get().spawner_cooldown_seconds;
-        this.addRenderableWidget(new AbstractSliderButton(centerX - 100, startY + spacing * 2, 200, 20,
-                cooldownLabel(seconds), ((double) seconds + 1) / (MAX_SPAWNER_COOLDOWN_SECONDS + 1)) {
-            @Override
-            protected void updateMessage() {
-                this.setMessage(cooldownLabel(ModConfig.get().spawner_cooldown_seconds));
-            }
-
-            @Override
-            protected void applyValue() {
-                int secs = (int) Math.round(this.value * (MAX_SPAWNER_COOLDOWN_SECONDS + 1)) - 1;
-                ModConfig.set("spawner_cooldown_seconds", String.valueOf(secs));
-                this.setMessage(cooldownLabel(secs));
+        // Number field (not a slider): exact values matter here, especially 0 = instant.
+        EditBox delayField = new EditBox(this.font, centerX - 100, START_Y + SPACING * 2 + 12, 200, 20,
+                Component.literal("Spawner Re-Challenge Delay"));
+        delayField.setMaxLength(7);
+        delayField.setValue(String.valueOf(ModConfig.get().spawner_cooldown_seconds));
+        delayField.setResponder(text -> {
+            try {
+                // set() clamps to the valid range; invalid partial input keeps the old value.
+                ModConfig.set("spawner_cooldown_seconds", String.valueOf(Integer.parseInt(text.trim())));
+            } catch (NumberFormatException ignored) {
             }
         });
+        this.addRenderableWidget(delayField);
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.back"), button ->
                         this.minecraft.setScreen(this.parent))
@@ -81,16 +77,13 @@ public class VaultModConfigScreen extends Screen {
         return Component.literal(prefix + ": " + (value ? "ON" : "OFF"));
     }
 
-    private static Component cooldownLabel(int secs) {
-        if (secs < 0) return Component.literal("Spawner Re-Challenge Delay: vanilla");
-        if (secs == 0) return Component.literal("Spawner Re-Challenge Delay: instant");
-        return Component.literal("Spawner Re-Challenge Delay: " + secs + "s");
-    }
-
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         graphics.centeredText(this.font, this.title, this.width / 2, 8, 0xFFFFFF);
+        graphics.centeredText(this.font,
+                Component.literal("Spawner Re-Challenge Delay (seconds): -1 = vanilla, 0 = instant"),
+                this.width / 2, START_Y + SPACING * 2, 0xA0A0A0);
     }
 
     @Override

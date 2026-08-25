@@ -77,7 +77,8 @@ public final class ModConfig {
         switch (key.toLowerCase()) {
             case "normal_vault_unlimited" -> c.normal_vault_unlimited = parseBool(value);
             case "ominous_vault_unlimited" -> c.ominous_vault_unlimited = parseBool(value);
-            case "spawner_cooldown_seconds" -> c.spawner_cooldown_seconds = Integer.parseInt(value);
+            case "spawner_cooldown_seconds" -> c.spawner_cooldown_seconds =
+                    Math.max(-1, Math.min(Integer.parseInt(value), 86_400));
             default -> {
                 return false;
             }
