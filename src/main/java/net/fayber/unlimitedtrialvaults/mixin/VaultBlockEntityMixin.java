@@ -2,6 +2,7 @@ package net.fayber.unlimitedtrialvaults.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fayber.unlimitedtrialvaults.ModConfig;
+import net.fayber.unlimitedtrialvaults.UnlimitedTrialVaults;
 import net.fayber.unlimitedtrialvaults.VaultContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -60,6 +61,10 @@ public abstract class VaultBlockEntityMixin {
 		boolean unlimited = state.getValue(VaultBlock.OMINOUS)
 				? cfg.ominous_vault_unlimited
 				: cfg.normal_vault_unlimited;
+		if (cfg.debug()) {
+			UnlimitedTrialVaults.LOGGER.info("[UTV] insert gate at {}: alreadyRewarded={}, unlimited={} -> gate={}",
+					pos.toShortString(), original, unlimited, original && !unlimited);
+		}
 		return original && !unlimited;
 	}
 
@@ -81,6 +86,10 @@ public abstract class VaultBlockEntityMixin {
 		if (unlimited) {
 			// Never record the player as rewarded: keeps the activation filter
 			// (VaultSharedData) passing and stops the 128-entry list from growing.
+			if (ModConfig.get().debug()) {
+				UnlimitedTrialVaults.LOGGER.info("[UTV] skipping rewarded-mark at {} for {}",
+						pos.toShortString(), player.getName().getString());
+			}
 			ci.cancel();
 		}
 	}

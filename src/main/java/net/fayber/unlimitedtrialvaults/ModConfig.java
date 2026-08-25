@@ -29,6 +29,15 @@ public final class ModConfig {
      * -1 = vanilla cooldown untouched, 0 = instantly re-triggerable, N = N seconds.
      */
     public int spawner_cooldown_seconds = -1;
+    /**
+     * Verbose logging of every mixin decision (activation filter, insert gate,
+     * rewarded-mark skip). Debug builds default this to true.
+     */
+    public boolean debug_logging = true;
+
+    public boolean debug() {
+        return debug_logging;
+    }
 
     public static ModConfig get() {
         return INSTANCE;
@@ -44,6 +53,7 @@ public final class ModConfig {
                     if (raw.normal_vault_unlimited != null) cfg.normal_vault_unlimited = raw.normal_vault_unlimited;
                     if (raw.ominous_vault_unlimited != null) cfg.ominous_vault_unlimited = raw.ominous_vault_unlimited;
                     if (raw.spawner_cooldown_seconds != null) cfg.spawner_cooldown_seconds = raw.spawner_cooldown_seconds;
+                    if (raw.debug_logging != null) cfg.debug_logging = raw.debug_logging;
                 }
             } catch (Exception e) {
                 UnlimitedTrialVaults.LOGGER.error("Failed to read config, using defaults", e);
@@ -63,6 +73,7 @@ public final class ModConfig {
         raw.normal_vault_unlimited = INSTANCE.normal_vault_unlimited;
         raw.ominous_vault_unlimited = INSTANCE.ominous_vault_unlimited;
         raw.spawner_cooldown_seconds = INSTANCE.spawner_cooldown_seconds;
+        raw.debug_logging = INSTANCE.debug_logging;
         try {
             Files.createDirectories(PATH.getParent());
             Files.writeString(PATH, GSON.toJson(raw));
@@ -79,6 +90,7 @@ public final class ModConfig {
             case "ominous_vault_unlimited" -> c.ominous_vault_unlimited = parseBool(value);
             case "spawner_cooldown_seconds" -> c.spawner_cooldown_seconds =
                     Math.max(-1, Math.min(Integer.parseInt(value), 86_400));
+            case "debug_logging" -> c.debug_logging = parseBool(value);
             default -> {
                 return false;
             }
@@ -95,7 +107,8 @@ public final class ModConfig {
     public String toString() {
         return "normal_vault_unlimited=" + normal_vault_unlimited
                 + ", ominous_vault_unlimited=" + ominous_vault_unlimited
-                + ", spawner_cooldown_seconds=" + spawner_cooldown_seconds;
+                + ", spawner_cooldown_seconds=" + spawner_cooldown_seconds
+                + ", debug_logging=" + debug_logging;
     }
 
     /** JSON shape on disk; boxed so missing keys keep their defaults. */
@@ -103,5 +116,6 @@ public final class ModConfig {
         Boolean normal_vault_unlimited;
         Boolean ominous_vault_unlimited;
         Integer spawner_cooldown_seconds;
+        Boolean debug_logging;
     }
 }

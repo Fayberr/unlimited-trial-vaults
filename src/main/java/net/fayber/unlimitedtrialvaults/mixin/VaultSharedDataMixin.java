@@ -3,6 +3,7 @@ package net.fayber.unlimitedtrialvaults.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import java.util.UUID;
 import net.fayber.unlimitedtrialvaults.ModConfig;
+import net.fayber.unlimitedtrialvaults.UnlimitedTrialVaults;
 import net.fayber.unlimitedtrialvaults.VaultContext;
 import net.minecraft.world.level.block.entity.vault.VaultServerData;
 import net.minecraft.world.level.block.entity.vault.VaultSharedData;
@@ -32,9 +33,13 @@ public abstract class VaultSharedDataMixin {
 	private static boolean unlimitedTrialVaults$allowRewardedToActivate(boolean original,
 			VaultServerData serverData, UUID uuid) {
 		ModConfig cfg = ModConfig.get();
-		boolean unlimited = VaultContext.isOminous(serverData)
-				? cfg.ominous_vault_unlimited
-				: cfg.normal_vault_unlimited;
-		return original && !unlimited;
+		boolean ominous = VaultContext.isOminous(serverData);
+		boolean unlimited = ominous ? cfg.ominous_vault_unlimited : cfg.normal_vault_unlimited;
+		boolean result = original && !unlimited;
+		if (cfg.debug()) {
+			UnlimitedTrialVaults.LOGGER.info("[UTV] activation filter: contained={} ominous={} unlimited={} -> eligible={}",
+					original, ominous, unlimited, !result);
+		}
+		return result;
 	}
 }

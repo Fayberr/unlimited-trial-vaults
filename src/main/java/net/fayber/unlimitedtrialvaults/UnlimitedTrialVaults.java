@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UnlimitedTrialVaults implements ModInitializer {
     public static final String MOD_ID = "unlimited_trial_vaults";
+    public static final String VERSION = "1.0.3";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
@@ -24,6 +25,6 @@ public class UnlimitedTrialVaults implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 UnlimitedTrialVaultsCommands.register(dispatcher));
 
-        LOGGER.info("Unlimited Trial Vaults initialized. Config: {}", ModConfig.get());
+        LOGGER.info("Unlimited Trial Vaults {} initialized. Config: {}", VERSION, ModConfig.get());
     }
 }
