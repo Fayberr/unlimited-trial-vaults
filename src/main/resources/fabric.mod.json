@@ -12,6 +12,7 @@
 		"sources": "https://github.com/Fayberr/unlimited-trial-vaults"
 	},
 	"license": "GPL-3.0-or-later",
+	"icon": "assets/unlimited_trial_vaults/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
