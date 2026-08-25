@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "net.fayber.unlimitedtrialvaults.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"TrialSpawnerMixin",
+		"VaultBlockEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

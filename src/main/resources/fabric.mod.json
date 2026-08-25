@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "unlimited_trial_vaults",
+	"version": "${version}",
+	"name": "Unlimited Trial Vaults",
+	"description": "Ominous vaults can be unlocked unlimited times per player and normal vaults optionally too; trial spawner re-challenge delay is configurable. Server-side behavior, keys still required.",
+	"authors": [
+		"Fayber"
+	],
+	"contact": {
+		"homepage": "https://github.com/Fayberr/unlimited-trial-vaults",
+		"sources": "https://github.com/Fayberr/unlimited-trial-vaults"
+	},
+	"license": "GPL-3.0-or-later",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.fayber.unlimitedtrialvaults.UnlimitedTrialVaults"
+		],
+		"modmenu": [
+			"net.fayber.unlimitedtrialvaults.VaultModMenu"
+		]
+	},
+	"mixins": [
+		"unlimited_trial_vaults.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": ">=26.1 <26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*",
+		"cloth-config": "*"
+	}
+}
