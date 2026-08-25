@@ -11,8 +11,8 @@ import java.nio.file.Path;
 /**
  * Mod config, stored as {@code config/unlimited_trial_vaults.json}.
  *
- * Defaults: ominous vaults unlockable unlimited times per player, normal vaults
- * vanilla (once per player), spawner cooldown untouched (-1 = vanilla).
+ * Defaults: both normal and ominous vaults unlockable unlimited times per
+ * player, spawner cooldown untouched (-1 = vanilla).
  */
 public final class ModConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -20,8 +20,8 @@ public final class ModConfig {
 
     private static ModConfig INSTANCE = new ModConfig();
 
-    /** Normal vaults can be unlocked unlimited times per player. Default false (vanilla). */
-    public boolean normal_vault_unlimited = false;
+    /** Normal vaults can be unlocked unlimited times per player. Default true. */
+    public boolean normal_vault_unlimited = true;
     /** Ominous vaults can be unlocked unlimited times per player. Default true (the point of the mod). */
     public boolean ominous_vault_unlimited = true;
     /**

@@ -26,7 +26,7 @@ public final class VaultClothScreen {
 
         ModConfig c = ModConfig.get();
         general.addEntry(bool(eb, "normal_vault_unlimited", "Normal Vaults Unlimited",
-                false, c.normal_vault_unlimited,
+                true, c.normal_vault_unlimited,
                 "Normal vaults can be unlocked unlimited times per player (keys still consumed)."));
         general.addEntry(bool(eb, "ominous_vault_unlimited", "Ominous Vaults Unlimited",
                 true, c.ominous_vault_unlimited,
