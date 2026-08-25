@@ -5,6 +5,7 @@
 	"mixins": [
 		"TrialSpawnerMixin",
 		"VaultBlockEntityMixin",
+		"VaultServerDataMixin",
 		"VaultSharedDataMixin"
 	],
 	"injectors": {
