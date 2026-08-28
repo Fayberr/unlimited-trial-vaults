@@ -52,11 +52,6 @@ public final class ModConfig {
         save();
     }
 
-    // test hook, swaps the active instance
-    static void setForTesting(ModConfig config) {
-        INSTANCE = config;
-    }
-
     public static void save() {
         Raw raw = new Raw();
         raw.normal_vault_unlimited = INSTANCE.normal_vault_unlimited;
