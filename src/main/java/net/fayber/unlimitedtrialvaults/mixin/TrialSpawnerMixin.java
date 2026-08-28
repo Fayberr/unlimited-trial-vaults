@@ -6,14 +6,11 @@ import net.minecraft.world.level.block.entity.trialspawner.TrialSpawner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * Makes the re-challenge delay of ALL trial spawners configurable.
- *
- * Vanilla derives its cooldown duration from {@code getTargetCooldownLength()};
- * every state transition that arms the cooldown timer flows through this method,
- * so replacing its return value is sufficient - vanilla handles the rest
- * (timer bookkeeping, particles, state machine) unchanged.
- */
+// makes the re-challenge delay of trial spawners configurable. vanilla reads
+// the cooldown length from getTargetCooldownLength() whenever it arms the
+// cooldown timer (state transition into COOLDOWN, not every tick), so just
+// swapping the return value here is enough - vanilla still handles the timer
+// bookkeeping, particles, state machine, all of that unchanged.
 @Mixin(TrialSpawner.class)
 public abstract class TrialSpawnerMixin {
 

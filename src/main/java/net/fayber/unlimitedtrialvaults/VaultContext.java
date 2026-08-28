@@ -3,16 +3,14 @@ package net.fayber.unlimitedtrialvaults;
 import java.util.WeakHashMap;
 import net.minecraft.world.level.block.entity.vault.VaultServerData;
 
-/**
- * Links VaultServerData instances to their vault type (ominous or not).
- *
- * Needed because the activation filter ({@code updateConnectedPlayersWithinRange})
- * only receives the data object, never the BlockState, so the ominous flag has to
- * be remembered from a context that has it (the server tick / key insert).
- *
- * WeakHashMap: entries vanish with the block entity, no leaks. VaultServerData
- * uses identity semantics (no equals override), which is what we want.
- */
+// maps a VaultServerData instance to its vault type (ominous or not).
+// the activation filter (updateConnectedPlayersWithinRange) only gets the
+// data object, never the BlockState, so we stash the ominous flag here from
+// the tick where we do have it, and read it back later.
+//
+// weak map on purpose - entries just disappear once the block entity is
+// gone, nothing to clean up manually. VaultServerData has no equals()
+// override so this is identity-keyed, which is what we want.
 public final class VaultContext {
 
     private static final WeakHashMap<VaultServerData, Boolean> OMINOUS = new WeakHashMap<>();
@@ -23,11 +21,9 @@ public final class VaultContext {
         OMINOUS.put(data, ominous);
     }
 
-    /**
-     * true = treat as ominous. On a miss this defaults to "unlimited allowed",
-     * which is the feature-preserving direction; misses should not happen in
-     * practice because the tick loop records every loaded vault continuously.
-     */
+    // defaults to true (unlimited-allowed) on a cache miss - shouldn't really
+    // happen since the tick loop records every loaded vault every tick, but
+    // if it ever does miss we want to fail open toward the mod's own feature
     public static boolean isOminous(VaultServerData data) {
         return OMINOUS.getOrDefault(data, Boolean.TRUE);
     }

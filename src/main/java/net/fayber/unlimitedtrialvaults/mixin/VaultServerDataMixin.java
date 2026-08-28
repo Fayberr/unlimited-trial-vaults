@@ -11,22 +11,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Neutralizes the once-per-player rule at METHOD level instead of at the call
- * sites inside tryInsertKey.
- *
- * Why method level: other mods (e.g. Carpet TIS Addition's vaultBlacklistDisabled
- * rule) hook the same call sites / expressions we did before 1.0.4, and stacked
- * injections on one bytecode slot silently misbehave. Hooking the callee methods
- * themselves cannot collide with anything: whatever happens at the caller side,
- * these bodies always run when invoked.
- *
- * For unlimited vault types:
- * - hasRewardedPlayer is forced false, so tryInsertKey's gate always passes and
- *   any "already unlocked" UI treats the player as eligible.
- * - addToRewardedPlayers is cancelled, so the player never enters rewardedPlayers
- *   in the first place (also stops the 128-entry list from growing).
- */
+// this is where the actual "unlimited" behavior lives: we hook the two
+// methods vanilla uses to track per-player unlocks, instead of the
+// tryInsertKey call sites (that's what 1.0.3 and earlier did, and it broke
+// when other mods hooked the same bytecode expressions - Carpet TIS
+// Addition's vaultBlacklistDisabled rule being the one that bit us).
+// hooking the methods themselves can't collide with anything since they
+// always run whenever something calls them, no matter what the caller looks
+// like.
+//
+// - hasRewardedPlayer forced false -> tryInsertKey's gate always passes
+// - addToRewardedPlayers cancelled -> player never gets added to the
+//   rewardedPlayers set in the first place, so it never grows for vaults
+//   that are set to unlimited (bonus: no need to ever clean it up either)
 @Mixin(VaultServerData.class)
 public abstract class VaultServerDataMixin {
 

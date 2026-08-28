@@ -8,32 +8,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * Mod config, stored as {@code config/unlimited_trial_vaults.json}.
- *
- * Defaults: both normal and ominous vaults unlockable unlimited times per
- * player, spawner cooldown untouched (-1 = vanilla).
- */
+// mod config, lives at config/unlimited_trial_vaults.json
+// defaults: both vault types unlimited, spawner cooldown untouched (-1 = vanilla)
 public final class ModConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("unlimited_trial_vaults.json");
 
     private static ModConfig INSTANCE = new ModConfig();
 
-    /** Normal vaults can be unlocked unlimited times per player. Default true. */
     public boolean normal_vault_unlimited = true;
-    /** Ominous vaults can be unlocked unlimited times per player. Default true (the point of the mod). */
     public boolean ominous_vault_unlimited = true;
-    /**
-     * Re-challenge delay for ALL trial spawners, in seconds.
-     * -1 = vanilla cooldown untouched, 0 = instantly re-triggerable, N = N seconds.
-     */
+    // -1 = vanilla cooldown untouched, 0 = instantly re-triggerable, N = N seconds
     public int spawner_cooldown_seconds = -1;
-    /**
-     * Source-level diagnostic switch. NOT exposed as config on purpose: flip in
-     * code and rebuild a one-off diagnostic jar when a bug needs hunting. The
-     * compiler strips the dead log branches entirely when false.
-     */
+    // not exposed in config on purpose - flip this and rebuild a one-off jar
+    // when actually debugging something. compiler strips the dead log calls
+    // when false so it costs nothing in a normal build.
     static final boolean DEBUG = false;
 
     public boolean debug() {
@@ -63,7 +52,7 @@ public final class ModConfig {
         save();
     }
 
-    /** Test hook: replace the active config instance. */
+    // test hook, swaps the active instance
     static void setForTesting(ModConfig config) {
         INSTANCE = config;
     }
@@ -81,7 +70,7 @@ public final class ModConfig {
         }
     }
 
-    /** Sets a key by name from the command or GUI; returns false if unknown. */
+    // sets a key by name from the command or the config GUI, false if the key doesn't exist
     public static boolean set(String key, String value) {
         ModConfig c = INSTANCE;
         switch (key.toLowerCase()) {
@@ -108,7 +97,7 @@ public final class ModConfig {
                 + ", spawner_cooldown_seconds=" + spawner_cooldown_seconds;
     }
 
-    /** JSON shape on disk; boxed so missing keys keep their defaults. */
+    // json shape on disk - boxed types so a missing key just stays null and load() skips it
     private static class Raw {
         Boolean normal_vault_unlimited;
         Boolean ominous_vault_unlimited;

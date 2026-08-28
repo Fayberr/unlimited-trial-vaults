@@ -7,10 +7,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.permissions.Permissions;
 
-/**
- * {@code /unlimited_trial_vaults config [get|set <key> <value>]} - live-edit the
- * mod config in game (admin permission level 2+). Changes save immediately.
- */
+// /unlimited_trial_vaults config [get|set <key> <value>] - live-edit the mod
+// config in game, requires op. saves to disk immediately on every change.
 public final class UnlimitedTrialVaultsCommands {
     private UnlimitedTrialVaultsCommands() {}
 

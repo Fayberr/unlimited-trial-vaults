@@ -14,17 +14,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Feeds vault type context ({@link VaultContext}) so the method-level hooks in
- * {@link VaultServerDataMixin} and {@link VaultSharedDataMixin} know whether a
- * given vault is ominous (the activation lambda and the VaultServerData methods
- * have no BlockState parameter of their own).
- *
- * Since 1.0.4 the insert gate and rewarded-mark logic live on
- * {@link VaultServerDataMixin} (method level) instead of at tryInsertKey call
- * sites - call-site injections collided with other mods hooking the same
- * expressions (Carpet TIS Addition's vaultBlacklistDisabled rule).
- */
+// just feeds VaultContext with the ominous flag every tick, since neither the
+// activation lambda nor the VaultServerData methods we hook get a BlockState
+// of their own to check that against.
+//
+// note: as of 1.0.4 we don't inject at the tryInsertKey call sites anymore
+// (that's why this mixin looks so small now) - those injections collided
+// with other mods hooking the same bytecode expressions, e.g. Carpet TIS
+// Addition's vaultBlacklistDisabled rule. The actual unlock logic moved to
+// method-level hooks in VaultServerDataMixin / VaultSharedDataMixin instead.
 @Mixin(VaultBlockEntity.Server.class)
 public abstract class VaultBlockEntityMixin {
 

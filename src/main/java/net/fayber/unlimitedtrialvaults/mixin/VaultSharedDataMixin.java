@@ -11,21 +11,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Neutralizes the ACTIVATION half of the once-per-player rule.
- *
- * Vanilla's updateConnectedPlayersWithinRange filters detected players through
- * lambda$updateConnectedPlayersWithinRange$0 = "!rewardedPlayers.contains(uuid)".
- * A rewarded player is never "connected", so the vault stays INACTIVE forever
- * for them and canEjectReward blocks every key insert silently.
- *
- * 1.0.3 and earlier injected INTO that lambda body (@ModifyExpressionValue on
- * its Set.contains call). That collides with other mods hooking the exact same
- * expression (Carpet TIS Addition's vaultBlacklistDisabled rule), so 1.0.4
- * instead cancels the whole lambda at HEAD: for unlimited vault types every
- * player counts as eligible, without touching any shared bytecode slot.
- * Vault types without unlimited fall through to vanilla behavior.
- */
+// this handles the OTHER half of the once-per-player rule: activation.
+// vanilla's updateConnectedPlayersWithinRange filters players through
+// lambda$updateConnectedPlayersWithinRange$0, basically
+// "!rewardedPlayers.contains(uuid)". if a player is already rewarded they're
+// never counted as "connected", so the vault just sits INACTIVE for them
+// forever and silently blocks every key insert - even with the
+// VaultServerDataMixin changes above, this lambda would still lock them out.
+//
+// used to inject inside the lambda body with @ModifyExpressionValue on the
+// Set.contains() call, but that stomped on the same expression Carpet TIS
+// Addition hooks for its vaultBlacklistDisabled rule. now we just cancel the
+// whole lambda at HEAD for unlimited vault types (everyone's eligible),
+// which can't collide with anything since it doesn't touch shared bytecode.
+// non-unlimited vault types just fall through to vanilla.
 @Mixin(VaultSharedData.class)
 public abstract class VaultSharedDataMixin {
 

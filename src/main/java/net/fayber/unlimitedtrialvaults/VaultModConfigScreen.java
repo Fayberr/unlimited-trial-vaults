@@ -6,12 +6,10 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-/**
- * Hand-rolled ModMenu config screen. Every control writes through
- * {@link ModConfig#set(String, String)}, which updates the in-memory config
- * and saves it to {@code config/unlimited_trial_vaults.json}. In singleplayer
- * the integrated server shares the same static config, so changes apply live.
- */
+// fallback config screen for when cloth-config isn't installed. every
+// control writes straight through ModConfig.set(), which updates the
+// in-memory config and saves it to disk. in singleplayer the integrated
+// server reads that same static config, so changes take effect live.
 public class VaultModConfigScreen extends Screen {
     private static final int START_Y = 25;
     private static final int SPACING = 26;
@@ -52,7 +50,7 @@ public class VaultModConfigScreen extends Screen {
                 .build());
     }
 
-    /** A toggle that flips the named boolean config key and saves it. */
+    // toggle button that flips the named boolean config key and saves it
     private Button booleanButton(String key, String label, int centerX, int y) {
         boolean current = readBool(key);
         return Button.builder(toggleText(label, current), button -> {
