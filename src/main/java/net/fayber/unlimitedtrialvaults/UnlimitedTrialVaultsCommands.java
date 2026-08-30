@@ -52,7 +52,7 @@ public final class UnlimitedTrialVaultsCommands {
     }
 
     private static boolean isAdmin(CommandSourceStack source) {
-        if (source.getServer().isSingleplayer()) {
+        if (source.getServer() != null && source.getServer().isSingleplayer()) {
             return true;
         }
         return source.permissions().hasPermission(Permissions.COMMANDS_ADMIN);
