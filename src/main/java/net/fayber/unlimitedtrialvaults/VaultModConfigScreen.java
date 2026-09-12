@@ -45,7 +45,7 @@ public class VaultModConfigScreen extends Screen {
         this.addRenderableWidget(delayField);
 
         this.addRenderableWidget(Button.builder(Component.translatable("gui.back"), button ->
-                        this.minecraft.setScreen(this.parent))
+                        this.minecraft.setScreenAndShow(this.parent))
                 .bounds(centerX - 100, this.height - 30, 200, 20)
                 .build());
     }
@@ -86,6 +86,6 @@ public class VaultModConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreenAndShow(this.parent);
     }
 }
