@@ -21,7 +21,7 @@ A lightweight server-side mod for Minecraft 26.1.x and 26.2 that tweaks Tricky T
 ## Commands & Config
 
 Admins (permission level 2+) can adjust settings live in-game:
-- `/unlimited_trial_vaults config` — view current configuration
+- `/unlimited_trial_vaults config` shows the current configuration
 - `/unlimited_trial_vaults config set ominous_vault_unlimited true`
 - `/unlimited_trial_vaults config set normal_vault_unlimited false`
 - `/unlimited_trial_vaults config set spawner_cooldown_seconds 0` (0 = instant re-challenge)
